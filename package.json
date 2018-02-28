@@ -1,0 +1,27 @@
+{
+  "name": "matches",
+  "version": "0.0.3",
+  "description": "play with computer in Matches game",
+  "main": "Matches.js",
+  "dependencies": {
+    "readline-sync": "^1.4.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "t"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AbramovskyIvan/MyFirstPfoject.git"
+  },
+  "keywords": [
+    "matches",
+    "play"
+  ],
+  "author": "Ivan Abramovsky",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AbramovskyIvan/MyFirstPfoject/issues"
+  },
+  "homepage": "https://github.com/AbramovskyIvan/MyFirstPfoject#readme"
+}
