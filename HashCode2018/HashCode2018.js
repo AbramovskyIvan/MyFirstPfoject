@@ -14,6 +14,8 @@ var rows = Number(firstLineData[0]),
     rides = Number(firstLineData[3]),
     bonus = Number(firstLineData[4]),
     steps = Number(firstLineData[5]);
+var counter1 = 0;
+var counter2 = 0;
 
 for (var i = 0; i <= vehicles - 1;  i++) {
   cars[i] = {
@@ -41,26 +43,29 @@ function orderCalculation (car, step, ord_ret) {
   var newOrders = [];
 
   //console.log('INNNNN')
-  for (var i = 0; i < roads.length; i++) {
-    order = roads[i];
-    //console.log(order);
+  for (var r = 0; r < roads.length; r++) {
+    order = roads[r];
+    //console.log(r);
     if (order.finished) {
-      newOrders[i] = null;
+      counter2 = counter2 + 1;
+      newOrders[r] = null;
     } else {
+      counter1 = counter1 + 1;
       var carCoords = car.order_id == null ? [0,0] : [roads[car.order_id].finish_x, roads[car.order_id].finish_y];
       var dist = Math.abs(order.start_x - carCoords[0]) + Math.abs(order.start_y - carCoords[1]);
-      var temp_points = step + dist <= order.start ? bonus : 0;
+      var temp_points = (step + dist) <= order.start ? bonus : 0;
       var points = temp_points + order.len;
-      var wait = order.start - (step + dist) < 0 ? 0 : order.start - step + dist;
+      var wait = (order.start - step - dist) < 0 ? 0 : (order.start - step - dist);
       var endTime = step + dist + wait + order.len;
       points = endTime > order.end ? 0 : points;
       var indicator = points - wait - dist;
-      newOrders[i] = indicator;
+      newOrders[r] = indicator;
     }
   }
-  console.log(newOrders);
+  // console.log(newOrders);
   //var best_order_id = newOrders.indexOf(Math.max(newOrders));
   //console.log(Math.max.apply(null, newOrders));
+  // console.log(newOrders.length);
   var best_order_id = newOrders.indexOf(Math.max.apply(null, newOrders));
 
   //console.log(best_order_id);
@@ -72,28 +77,32 @@ function orderCalculation (car, step, ord_ret) {
   
 }
 
-for (var step = 0; step <= steps; step++) {
-  for (var i = 0; i <= cars.length - 1; i++) {
-    // console.log(step);
+for (var step = 0; step <= 1; step++) { //steps; step++) { //
+  for (var cur_car = 0; cur_car <= cars.length - 1; cur_car++) {
+
+    console.log(cur_car);
     // console.log(cars[i].free_time);
     // console.log("-----------------");
-    if (cars[i].free_time == step) {
-      var bestId = orderCalculation(cars[i], step, true);
-      var cur_free_time = orderCalculation(cars[i], step, false);
+    if (cars[cur_car].free_time == step) {
+      var bestId = orderCalculation(cars[cur_car], step, true);
+      var cur_free_time = orderCalculation(cars[cur_car], step, false);
       // console.log("-----------------");
       // console.log(bestId);
       // console.log("-----------------");
-      cars[i].free_time = cur_free_time;
-      cars[i].order_id = bestId;
-      try {
+      if  (bestId != -1) {
+        cars[cur_car].free_time = cur_free_time;
+        cars[cur_car].order_id = bestId;
         roads[bestId].finished = true;
-        cars[i].orders.push(bestId);
-      } catch(err) {
-
+        cars[cur_car].orders.push(bestId);
+        // console.log(i);
+        // console.log(cars[i]);
       }
     };
   }
 }
+
+console.log(counter1);
+console.log(counter2);
 
 var fname = './out.out';
 // var ress[];
@@ -123,5 +132,5 @@ fs.open(fname, "w+", 0644, function(err, file_handle) {
 	}
 });
 
-console.log(cars)
+// console.log(cars)
 
